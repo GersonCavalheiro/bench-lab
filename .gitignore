@@ -1,0 +1,19 @@
+# resultados gerados (diretorios ${HOST}-${ARCH})
+*-*
+saida
+
+# objetos, executaveis e temporarios de compilacao
+*.o
+*.obj
+*.a
+*.out
+*.s
+!ilp.s
+*.vec.txt
+eficiente
+ineficiente
+openmp
+*~
+*.tmp
+core
+core.*
