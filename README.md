@@ -133,31 +133,3 @@ Os resultados são gerados dentro do contêiner em
 `/opt/bench-lab/${HOST}-${ARCH}/` (`HOST=container` por padrão) e, com o
 volume acima, são registrados no diretório `saida/` do host.
 
-### Pelo Makefile (alternativa)
-
-```bash
-make run          # compila e executa as versões sequenciais + openmp
-make tlp          # compila/executa as variantes de paralelização automática
-make inspecao     # gera os relatórios 10..31 (usa perf/cachegrind se disponíveis)
-make clean
-```
-
-## Principais resultados (Ryzen 5 5500U — 6 núcleos / 12 threads)
-
-* **ILP** (`06-ilp.txt`): bloco independente com IPC ≈ **3,94** (≈ `Dispatch Width` 4,
-  saturando as 4 ALUs); bloco dependente com IPC = **1,0** → o custo das
-  dependências RAW é de ≈ **4×**, o teto de ILP da máquina.
-* **Ordem dos laços** (`07-Tempos.txt`): `ikj` é ~**14×** mais rápido que `ijk`
-  em N=384 e ~**55×** em N=1024 — o ganho vai além do teto de ILP porque o
-  acesso sequencial habilita **vetorização AVX2** e evita falhas de cache.
-* **TLP** (OpenMP): `parallel for` no laço externo rende **5–6×** com 12 threads;
-  com `OMP_NUM_THREADS=1` o tempo volta ao normal → a diferença é só de TLP.
-* **Paralelização automática**: ajuda no `ineficiente` (laço externo escolhido)
-  mas **atrapalha** o `eficiente` (GCC escolhe o laço interno → milhares de
-  regioes OpenMP) — ver `26/27-ParalelizacaoAutomatica*.txt`.
-* **`collapse`**: aplicar `collapse(2)` sobre `(i,k)` é **incorreto** aqui (as
-  itações colapsadas escrevem na mesma linha de `C` → corrida de dados);
-  o correto é paralelizar apenas o laço externo `i`, como em `openmp.c`.
-
-Todos os programas imprimem um `checksum` idêntico para o mesmo `N`, o que
-valida que as versões computam o mesmo resultado.
