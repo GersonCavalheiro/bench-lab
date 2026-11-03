@@ -19,7 +19,8 @@ HOST=${HOST:-$(hostname)}
 ARCH=$(uname -m)
 DIR="${HOST}-${ARCH}"
 BIN="$DIR/bin"
-CFLAGS="-O3 -march=native -std=c11 -Wall -Wextra -Wpedantic -fno-loop-interchange -fno-tree-loop-distribute-patterns"
+# CFLAGS="-O3 -march=native -std=c11 -Wall -Wextra -Wpedantic -fno-loop-interchange -fno-tree-loop-distribute-patterns"
+CFLAGS="-O2 -g -mavx2 -mfma -std=c11 -Wall -Wextra -Wpedantic -fno-loop-interchange -fno-tree-loop-distribute-patterns"
 
 # O sufixo do llvm-mca varia entre maquinas (llvm-mca-18, llvm-mca-19, ...).
 # Detecta a primeira versao disponivel; MCA no ambiente força uma especifica.
